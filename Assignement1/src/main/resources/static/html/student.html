@@ -1,0 +1,57 @@
+<html>
+<head>
+    <script src="../js/jquery-1.7.2.min.js"></script>
+    <title>Student</title>
+    <script>
+        $(document).ready(function () {
+            // Load student data
+            $.get('/getStudents', function (studentData) {
+                $.each(studentData, function (key, student) {
+                    const row = `<tr>
+                                    <td>${student.id}</td>
+                                    <td>${student.name}</td>
+                                    <td>${student.age}</td>
+                                    <td><button class="hideBtn">Hide</button></td>
+                                    <td><button class="showAddressBtn">Show Address</button></td>
+                                </tr>`;
+                    $('#studentTable tbody').append(row);
+                });
+            });
+
+            // Load address data
+            $.get('/getAddresses', function (addressData) {
+                // Store address data in a variable for later use
+                const addresses = addressData;
+
+                // Handle click event created "Show Address" buttons
+                $('#studentTable').on('click', '.showAddressBtn', function () {
+                    const rowIndex = $(this).closest('tr').index();
+                    const address = addresses[rowIndex];
+
+                    // Display address details
+                    alert(`HouseNo: ${address.houseNo}\nCity: ${address.city}\nProvince: ${address.province}\nCountry: ${address.country}\nPhoneNo: ${address.phoneNumber}`);
+                });
+            });
+
+            // Handle click event created "Hide" buttons
+            $('#studentTable').on('click', '.hideBtn', function () {
+                $(this).closest('tr').hide();
+            });
+        });
+    </script>
+</head>
+<body>
+    <table border="1" align="center" id="studentTable">
+        <thead>
+            <tr>
+                <td>ID:</td>
+                <td>Name:</td>
+                <td>Age:</td>
+                <td>Hide Record:</td>
+                <td>Show Address:</td>
+            </tr>
+        </thead>
+        <tbody></tbody>
+    </table>
+</body>
+</html>
